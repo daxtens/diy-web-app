@@ -1,3 +1,4 @@
+# TeX
 *.acn
 *.acr
 *.alg
@@ -30,3 +31,7 @@
 *.vrb
 *.xdy
 *.tdo
+# Python
+*.pyc
+# Vagrant
+.vagrant/
