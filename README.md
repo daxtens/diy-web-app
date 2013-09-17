@@ -1,9 +1,23 @@
 diy-web-app
 ===========
 
-Files for the "From 0 to DIY web app in 120 minutes" talk at CompCon 2013.
+In 2 hours, you'll build a full stack and (partially) buzzword compliant web app. It's the ideal platform for something too 'different' for a CMS like WordPress and too simple/small to justify using a massive framework like Django. 
 
-Stuff you **must** do before the talk is below. **I will not have time to help troubleshoot your vagrant/ssh/etc issues during the talk. If you have issues, *please* contact me on [daniel@axtens.net](mailto:daniel@axtens.net) *before* the talk.**
+By the end of the workshop, you'll have built a web application using Python, the Bottle micro framework, a MongoDB backend, the nginx web server, Amazon Web Services (AWS), and a Bootstrap front-end with some jQuery based AJAX-y fun. We'll also cover authentication (and how not to screw it up), and Google Analytics, so you can watch your app go viral. We'll learn about Fabric for simple deployment, and Vagrant for painless team development. I'll tell you about common security vulnerabilities and how to avoid them. Even better, you will be given a week's usage of an AWS micro instance to host your new app. 
+
+I'm interested but I don't know what X is
+===========================
+Don't worry if any of the above terms are new to you: zero web development knowledge is assumed.
+
+However, it is assumed that you:
+* **Are familiar with procedural programming**. If you know what a function/procedure/method is, and what for loops and if statements are, and can code them in at least one language, you're probably going to be fine on this count. If you don't, googling something like "python for non-programmers" is probably a good start, or you can try something like [this](http://hetland.org/writing/instant-hacking.html).
+* **Have a basic knowledge of Python**. If you are a programmer familiar with other languages, try [this](http://hetland.org/writing/instant-python.html), otherwise see the reference above.
+* **Have a basic knowledge of HTTP** The difference between GET/POST and the meaning of 404/500 errors would be helpful. Anything else is a bonus. I leave this to your ability to google.
+* **Knowing about git would also be helpful.** If you are familiar with version control systems, I recommend [Everyday GIT with 20 commands or so](https://www.kernel.org/pub/software/scm/git/docs/everyday.html). If you've never used a version control system before (or are going "What's a version control system?"), then you might want to start with this [introduction to version control](http://git-scm.com/book/en/Getting-Started-About-Version-Control), and read that and the next few pages. (You can skip the one on git history!) Getting your head clear on the [3 states](http://git-scm.com/book/en/Getting-Started-Git-Basics#The-Three-States) will make your life easier.
+
+Before the talk
+==========
+You **must** do the following before the talk. **I will not have time to help troubleshoot your vagrant/ssh/etc issues during the talk. If you have issues, *please* contact me on [daniel@axtens.net](mailto:daniel@axtens.net) *before* the talk.**
 
 These instructions have been tested on a Mac. Windows users, I apologise if things are a bit fuzzy.
 
