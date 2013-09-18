@@ -1,4 +1,4 @@
-from bottle import route, run
+from bottle import route, run, template
 
 @route('/')
 def index():
@@ -7,7 +7,7 @@ def index():
 
 @route('/greet/<name>')
 def greet(name):
-	return "Hello, %s!" % name
+	return template("Hello, {{name}}!", name=name)
 
 
 if __name__ == '__main__':

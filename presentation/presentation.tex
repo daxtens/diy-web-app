@@ -37,7 +37,30 @@
 \section{Getting Started}
 
 \begin{frame}
-  \frametitle{Internet}
+  \frametitle{Start thinking...}
+  \begin{itemize}
+  \item There's no set end product for this workshop. There will be
+    several spots where you can decide for yourself what to do, and
+    assistance in making it happen.
+
+  \item Start thinking about a (relatively) simple application that
+    reads from \textbf{and} writes to a free-form-ish database. Perhaps:
+    \begin{itemize}
+    \item (Yet another) blog with comments, photo-sharing service,
+      todo list, calendar, social-bookmarking service, etc.
+    \item Collate information from a variety of internet-connected
+      sensors, process it, and display a
+      result. (e.g. average/min/max?)
+    \item A database of quotable quotes, with up/down-voting
+    \item Configurable Insult/3 word slogan/etc
+      generator
+    \item Your idea here.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Get on the internet}
   \begin{itemize}
   \item Get on the internet.
 
@@ -293,6 +316,218 @@ def greet(name):
   \texttt{git add webapp.py}\\
   \texttt{git commit -m"Add greet function"}\\
   \texttt{git push}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Danger, Will Robinson!}
+  Spot the subtle error and potential security hole.
+
+  First to spot it gets a free freddo. TODO CONFIRM
+\end{frame}
+
+\begin{frame}
+  \frametitle{Danger, Will Robinson!}
+
+  What happens if you go to \url{localhost:8080/greet/<b>Daniel}?
+
+  \textbf{This unescaped HTML has the potential (in other
+    circumstances) to cause XSS vulnerabilites.}
+
+  Fortunately, it's easy to avoid.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Safe user input the right way}
+  
+  {\large Don't try to sanitise it yourself.}
+
+  You will probably miss an edge case.
+
+  \vskip1em
+
+  {\Large Use templates.}
+
+  \begin{minted}{python}
+    from bottle import route, run, template
+
+    ...
+
+    def greet(name):
+    	return template("Hello, {{name}}!", name=name)
+  \end{minted}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Separating presentation and content}
+  We don't want template code in \texttt{.py} files.
+
+  Edit \texttt{views/hello.tpl}. Fill it with standard HTML, with
+  \texttt{\{\{name\}\}} somewhere. (Lazy? See the link to the sample
+  on the notes.)
+
+  Then:
+  \begin{minted}{python}
+    from bottle import route, run, template, view
+
+    ...
+
+    @route('/greet/<name>')
+    @view('hello')
+    def greet(name):
+    	return {'name': name}
+  \end{minted}
+
+  \textbf{Bottle's template language (SimpleTemplate Engine) has more
+    features, which we'll cover later...}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Simplifying things}
+  Why do we have different functions for \texttt{/} and \texttt{/greet}, when they do
+  mostly the same thing? \textbf{A bottle function can handle multiple
+  routes.}
+
+  \begin{minted}{python}
+@route('/')
+@route('/greet/<name>')
+@view('hello')
+def greet(name="World"):
+  \end{minted}
+\end{frame}
+
+\begin{frame}
+\frametitle{Best practices: commit your changes!}
+\texttt{git add webapp.py views/hello.tpl}\\
+\texttt{git commit -m"Serve Hello World with a template."}\\
+\texttt{git push}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Serving static files}
+  \textcolor{red}{\large Put them in a separate sub-directory!}
+
+  \begin{minted}{python}
+from bottle import route, run, template, view, static_file
+import os
+
+root = os.path.dirname(__file__)
+static_root = os.path.join(root, "static")
+
+...
+
+@route('/static/<path:path>')
+def static(path):
+    return static_file(path, root=static_root)
+    \end{minted}
+\end{frame}
+
+\begin{frame}
+\frametitle{Best practices: commit your changes!}
+\texttt{git add webapp.py}\\
+\texttt{git commit -m"Serve static files out of static/"}\\
+\texttt{git push}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Server}
+    \begin{center}
+      \begin{tikzpicture}[node distance=0.1cm]
+        \node (proxy) [object, rectangle split, rectangle split parts=2]
+        {
+          \textbf{Reverse Proxy}
+          \nodepart{second}nginx
+        };
+        \node (Server) [highlight, rectangle split, rectangle split parts=2, below=of proxy]
+        {
+          \textbf{Server}
+          \nodepart{second}Python
+        };
+        \node (Frontend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift=-2cm]
+        {
+          \textbf{Static Assets}
+          \nodepart{second}Images \\ CSS \\ JavaScript \\ HTML?
+        };
+        \node (Backend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift = 2cm]
+        {
+          \textbf{Dynamic Content}
+          \nodepart{second}Python\\Templates
+        };
+        \node (Database) [object, rectangle split, rectangle split parts=2, below=of Backend]
+        {
+          \textbf{Database}
+          \nodepart{second}MongoDB
+        };
+      \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\subsection{Front end}
+
+\begin{frame}
+  \frametitle{Front end}
+    \begin{center}
+      \begin{tikzpicture}[node distance=0.1cm]
+        \node (proxy) [object, rectangle split, rectangle split parts=2]
+        {
+          \textbf{Reverse Proxy}
+          \nodepart{second}nginx
+        };
+        \node (Server) [object, rectangle split, rectangle split parts=2, below=of proxy]
+        {
+          \textbf{Server}
+          \nodepart{second}Python
+        };
+        \node (Frontend) [highlight, rectangle split, rectangle split parts=2, below=of Server, xshift=-2cm]
+        {
+          \textbf{Static Assets}
+          \nodepart{second}Images \\ CSS \\ JavaScript \\ HTML?
+        };
+        \node (Backend) [highlight, rectangle split, rectangle split parts=2, below=of Server, xshift = 2cm]
+        {
+          \textbf{Dynamic Content}
+          \nodepart{second}Python\\Templates
+        };
+        \node (Database) [object, rectangle split, rectangle split parts=2, below=of Backend]
+        {
+          \textbf{Database}
+          \nodepart{second}MongoDB
+        };
+      \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Introducing Bootstrap}
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.3]{imgs/bootstrap_banner.png}
+    \caption{Bootstrap: \url{getbootstrap.com}}
+    \label{fig:bootstrap_banner}
+  \end{figure}
+
+  \begin{itemize}
+  \item We're lazy, so we use Bootstrap for the frontend.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Setting up Bootstrap}
+\begin{itemize}
+  \item Download it from \url{getbootstrap.com}, extract the archive,
+    put the folders in \texttt{static/}
+  \item Choose the example from
+    \url{http://getbootstrap.com/getting-started/#examples} that best
+    suits your project.
+    \begin{itemize}
+    \item Copy the code to \texttt{views/index.tpl}
+    \item Download any extra stylesheets, etc.
+    \item Adjust all links to read \texttt{/static/\{js, css, etc\}/...}
+    \end{itemize}
+  \item Adjust your code to use the \texttt{index} template, not the
+  \texttt{hello} one.
+\end{itemize}
 \end{frame}
 
 \end{document}
