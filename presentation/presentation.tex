@@ -37,14 +37,39 @@
 \section{Getting Started}
 
 \begin{frame}
+  \frametitle{When you should not use this}
+  \begin{itemize}
+  \item Static web site $\to$ static HTML and CSS.
+  \item User-editable content --- blog/corporate website $\to$ Content Managment System
+  \item Data driven and highly structured data, well understood
+    system based around Create Retrieve Update Delete (CRUD) $\to$
+    e.g. Django
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{When you should use this}
+  \begin{itemize}
+  \item Something requiring persistent storage but where the data is
+    not highly structured, or has a frequently changing schema or is
+    otherwise difficult to reduce to a relational database $\to$ a
+    non-relational database (NoSQL): e.g. MongoDB
+  \item Something so small that setting up something like Django will
+    take longer than actually implementing the functionality $\to$ a
+    micro-framework, e.g. Bottle
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
   \frametitle{Start thinking...}
   \begin{itemize}
   \item There's no set end product for this workshop. There will be
     several spots where you can decide for yourself what to do, and
-    assistance in making it happen.
+    get assistance in making it happen.
 
   \item Start thinking about a (relatively) simple application that
-    reads from \textbf{and} writes to a free-form-ish database. Perhaps:
+    (preferably) fits the previous critera, or at least is dynamic
+    with persistent storage. Perhaps:
     \begin{itemize}
     \item Collate information from a variety of internet-connected
       sensors, process it, and display a
@@ -90,7 +115,7 @@
   \frametitle{Remote environment}
   
   \begin{itemize}
-  \item You get a week of AWS time to build/experiment with your app.
+  \item You get a week of EC2 time on AWS to build/experiment with your app.
   \item AWS (Amazon Web Services) $\to$ a set of services.
     \begin{itemize}
     \item EC2 - Elastic Cloud Compute $\to$ Virtual Machines
@@ -522,14 +547,29 @@ def static(path):
     \url{http://getbootstrap.com/getting-started/#examples} that best
     suits your project.
     \begin{itemize}
-    \item (Optionally) find it on GitHub.
-    \item Copy the code to \texttt{views/index.tpl}
-    \item Download any extra stylesheets, etc.
-    \item Adjust all links to read \texttt{/static/\{js, css, etc\}/...}
+      \item (Optionally) find it on GitHub.
+      \item Copy the code to \texttt{views/index.tpl}
+      \item Download any extra stylesheets, etc.
+      \item Adjust all links to read \texttt{/static/\{js, css,
+        etc\}/...} (look for \texttt{src=}, \texttt{href=})
+      \item Fill out the relevant title, meta, etc tags.
     \end{itemize}
   \item Adjust your code to use the \texttt{index} template, not the
-  \texttt{hello} one.
-\end{itemize}
+    \texttt{hello} one.
+  \item Include \texttt{\{\{name\}\}} in there somewhere :)
+  \item Don't know HTML? Don't worry! I'll be wandering around
+    answering questions.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What can I do with Bootstrap?}
+  \begin{itemize}
+  \item Have things look not-terrible with minimal effort.
+  \item Have mobile-compatible (``responsive'') layouts basically for
+    free.
+
+  \end{itemize}
 \end{frame}
 
 \end{document}
