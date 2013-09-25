@@ -489,6 +489,265 @@ def static(path):
     \end{center}
 \end{frame}
 
+\subsection{Database}
+
+\begin{frame}
+  \frametitle{Database}
+    \begin{center}
+      \begin{tikzpicture}[node distance=0.1cm]
+        \node (proxy) [object, rectangle split, rectangle split parts=2]
+        {
+          \textbf{Reverse Proxy}
+          \nodepart{second}nginx
+        };
+        \node (Server) [object, rectangle split, rectangle split parts=2, below=of proxy]
+        {
+          \textbf{Server}
+          \nodepart{second}Python
+        };
+        \node (Frontend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift=-2cm]
+        {
+          \textbf{Static Assets}
+          \nodepart{second}Images \\ CSS \\ JavaScript \\ HTML?
+        };
+        \node (Backend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift = 2cm]
+        {
+          \textbf{Dynamic Content}
+          \nodepart{second}Python\\Templates
+        };
+        \node (Database) [highlight, rectangle split, rectangle split parts=2, below=of Backend]
+        {
+          \textbf{Database}
+          \nodepart{second}MongoDB
+        };
+      \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Introducing MongoDB}
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.75]{imgs/mongodb_logo}
+    \caption{MongoDB (from ``humongous'') is an open-source document database, and the leading NoSQL database.}
+    \label{fig:mongodb}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{NoSQL? Wat? --- A diversion on databases}
+  \begin{itemize}
+  \item Traditional database (e.g. MySQL ($\to$ MariaDB), PostgresSQL, MS-SQL) = Relational Databases
+  \item ``NoSQL'' $\to$ umbrella term for a large number of non-relational databases.
+    \begin{itemize}
+    \item Document: e.g. MongoDB/CouchDB
+    \item Key-value store: e.g. Redis
+    \item Other exciting things: e.g. Neo4j - graph database, 
+    \end{itemize}
+  \end{itemize}
+
+  Both are \emph{tools for different purposes}, with \emph{different
+    strenghts and weaknesses}. \textbf{Just because MongoDB is cool,
+    doesn't mean it is the solution to all your problems.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Why MongoDB for us now?}
+  \begin{itemize}
+  \item Even with advanced database migration tools like South (for
+    Django), it's still easier to do schema migrations in
+    MongoDB. This helps with the sort of rapid prototyping we're doing here.
+  \item It's really easy to store files/images in a
+    MongoDB. Not necessarily super-efficient, but again good for
+    prototyping.
+  \item Often easier to wrap your head around.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Getting started with MongoDB}
+
+  \begin{itemize}
+  \item Key component is a document.
+  \item Document has a unique ID.
+  \item Documents are JSON-like.
+  \item Can contain arbitrary key-value pairs. Values can include
+    arrays and other key-value mappings (`objects')
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{An Example}
+\begin{minted}{js}
+{ "title" : "Post",
+  "content" : "I think W, Y, and Z.",
+  "author" : "Daniel Axtens",
+  "date" : ISODate("2013-10-25T08:45:00Z"),
+  "comments" : [{
+    "author" : "Anonymous",
+    "content" : "First P0000st!",
+    "date" : ISODate("2013-09-25T10:01:44.405Z")
+  }, {
+    "author" : "Mr. Helpful",
+    "content" : "I think you might have missed X, \
+                which is listed on my blog.",
+    "link" : "http://helpful.blog.com/",
+    "date" : ISODate("2013-09-25T10:01:44.405Z")
+  }]}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Converting this to code}
+
+  Only chumps and people who enjoy getting owned write their own
+  queries. We use MongoEngine. This is \texttt{blog\_example.py}:
+
+  \inputminted[firstline=1,lastline=11]{python}{../steps/02-database/blog_example.py}
+\end{frame}
+
+\begin{frame}[fragile]
+  Now, let's connect to the database, create and save a post. (This is
+  more of \texttt{blog\_example.py})
+
+  \inputminted[firstline=13,lastline=21]{python}{../steps/02-database/blog_example.py}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Exploring your newly created document}
+\begin{verbatim}
+$ mongo
+> use blog_example
+> show collections
+> db.blog_posts.find()
+> db.blog_posts.find({'author': 'Daniel Axtens'})[0]
+\end{verbatim}
+SQL equivalent:
+ \mint{sql}|SELECT * FROM blog_posts WHERE author = 'Daniel Axtens'|
+\end{frame}
+
+\begin{frame}
+  \frametitle{Retriving with MongoEngine}
+  \inputminted[firstline=22,lastline=35]{python}{../steps/02-database/blog_example.py}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{But I want my blog to have comments!}
+  \inputminted[firstline=5,lastline=11]{python}{../steps/02-database/comment_example.py}
+  \begin{minted}{python}
+class BlogPost(Document):
+    ...
+    comments = ListField(EmbeddedDocumentField(Comment))    
+  \end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{But I want my blog to have comments!}
+  \inputminted[firstline=33,lastline=44]{python}{../steps/02-database/comment_example.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{But I want my blog to have comments!}
+  \inputminted[firstline=46,lastline=59]{python}{../steps/02-database/comment_example.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{But I want my blog to have comments!}
+  \begin{itemize}
+  \item Did you notice the seamless and painless schema migration?
+  \item Did you notice the really, really painless Object-Document
+    Mapping? Treating a list of comments as a Python list?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Over to you...}
+  \begin{itemize}
+  \item What can a MongoEngine Document contain? (Highlights - see
+    your document TODO for the full list)
+    \begin{itemize}
+    \item BooleanField
+    \item DateTimeField
+    \item IntField / LongField / DecimalField / FloatField
+    \item DictField / MapField
+    \item EmailField / URLField
+    \item EmbeddedDocumentField
+    \item FileField / ImageField
+    \item GeoPointField
+    \item ListField / SortedListField
+    \item ReferenceField
+    \item StringField
+    \end{itemize}
+  \item There's also an awesome inheritance system.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Database}
+    \begin{center}
+      \begin{tikzpicture}[node distance=0.1cm]
+        \node (proxy) [object, rectangle split, rectangle split parts=2]
+        {
+          \textbf{Reverse Proxy}
+          \nodepart{second}nginx
+        };
+        \node (Server) [object, rectangle split, rectangle split parts=2, below=of proxy]
+        {
+          \textbf{Server}
+          \nodepart{second}Python
+        };
+        \node (Frontend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift=-2cm]
+        {
+          \textbf{Static Assets}
+          \nodepart{second}Images \\ CSS \\ JavaScript \\ HTML?
+        };
+        \node (Backend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift = 2cm]
+        {
+          \textbf{Dynamic Content}
+          \nodepart{second}Python\\Templates
+        };
+        \node (Database) [highlight, rectangle split, rectangle split parts=2, below=of Backend]
+        {
+          \textbf{Database}
+          \nodepart{second}MongoDB
+        };
+      \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Serving up your database}
+    \begin{center}
+      \begin{tikzpicture}[node distance=0.1cm]
+        \node (proxy) [object, rectangle split, rectangle split parts=2]
+        {
+          \textbf{Reverse Proxy}
+          \nodepart{second}nginx
+        };
+        \node (Server) [object, rectangle split, rectangle split parts=2, below=of proxy]
+        {
+          \textbf{Server}
+          \nodepart{second}Python
+        };
+        \node (Frontend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift=-2cm]
+        {
+          \textbf{Static Assets}
+          \nodepart{second}Images \\ CSS \\ JavaScript \\ HTML?
+        };
+        \node (Backend) [highlight, rectangle split, rectangle split parts=2, below=of Server, xshift = 2cm]
+        {
+          \textbf{Dynamic Content}
+          \nodepart{second}Python\\Templates
+        };
+        \node (Database) [highlight, rectangle split, rectangle split parts=2, below=of Backend]
+        {
+          \textbf{Database}
+          \nodepart{second}MongoDB
+        };
+      \end{tikzpicture}
+    \end{center}
+\end{frame}
+
 \subsection{Front end}
 
 \begin{frame}
@@ -568,8 +827,13 @@ def static(path):
   \item Have things look not-terrible with minimal effort.
   \item Have mobile-compatible (``responsive'') layouts basically for
     free.
-
+  \item Get a bunch of integrated client-side behaviours through
+    jQuery.
+  \item More on this when we have some data to interact with!
+  \item There are more things. I cannot do design to save my life.
   \end{itemize}
 \end{frame}
+
+
 
 \end{document}

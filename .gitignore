@@ -36,3 +36,5 @@
 *.pyc
 # Vagrant
 .vagrant/
+# backups
+*~
