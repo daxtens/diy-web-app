@@ -748,6 +748,31 @@ class BlogPost(Document):
     \end{center}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Reading/Writing from your MongoDB}
+  \begin{itemize}
+  \item I usually put all my class definitions and my
+    \texttt{connect(...)} call in a separate file
+    (e.g. \texttt{database.py}), then say:
+    
+    \mint{python}|from database import *| 
+    
+    Although there's really no reason you couldn't have it all in one
+    file.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simple and stupid example}
+  \inputminted[firstline=8,lastline=22]{python}{../steps/02-database/01-webapp.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Off you go!}
+  {\Huge Now work on the core of your own app! I'll be around if you
+    have questions or need help.}
+\end{frame}
+
 \subsection{Front end}
 
 \begin{frame}
@@ -813,9 +838,9 @@ class BlogPost(Document):
         etc\}/...} (look for \texttt{src=}, \texttt{href=})
       \item Fill out the relevant title, meta, etc tags.
     \end{itemize}
-  \item Adjust your code to use the \texttt{index} template, not the
-    \texttt{hello} one.
-  \item Include \texttt{\{\{name\}\}} in there somewhere :)
+  \item Adjust your code to use the \texttt{index} template.
+  \item Include your parameters (e.g. \texttt{\{\{name\}\}}) in there
+    somewhere :)
   \item Don't know HTML? Don't worry! I'll be wandering around
     answering questions.
   \end{itemize}
@@ -829,7 +854,6 @@ class BlogPost(Document):
     free.
   \item Get a bunch of integrated client-side behaviours through
     jQuery.
-  \item More on this when we have some data to interact with!
   \item There are more things. I cannot do design to save my life.
   \end{itemize}
 \end{frame}
