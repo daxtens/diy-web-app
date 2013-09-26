@@ -758,7 +758,7 @@ class BlogPost(Document):
     \mint{python}|from database import *| 
     
     Although there's really no reason you couldn't have it all in one
-    file.
+    file. (Neatness concerns aside.)
   \end{itemize}
 \end{frame}
 
@@ -825,8 +825,12 @@ class BlogPost(Document):
 \begin{frame}[fragile]
 \frametitle{Setting up Bootstrap}
 \begin{itemize}
-  \item Download it from \url{getbootstrap.com}, extract the archive,
-    put the folders in \texttt{static/}
+\item Download it from \url{getbootstrap.com/getting-started}, extract
+  the archive, put the folders in \texttt{static/}
+  \begin{itemize}
+  \item \emph{Don't download the version from the front page. Get the
+      one with the pre-compiled JS and CSS assets.}
+  \end{itemize}
   \item Choose the example from
     \url{http://getbootstrap.com/getting-started/#examples} that best
     suits your project.
@@ -834,15 +838,12 @@ class BlogPost(Document):
       \item (Optionally) find it on GitHub.
       \item Copy the code to \texttt{views/index.tpl}
       \item Download any extra stylesheets, etc.
-      \item Adjust all links to read \texttt{/static/\{js, css,
-        etc\}/...} (look for \texttt{src=}, \texttt{href=})
+      \item Adjust relevant links to read \texttt{/static/\{js, css,
+          etc\}/...} (look for \texttt{src=}, \texttt{href=})
       \item Fill out the relevant title, meta, etc tags.
     \end{itemize}
-  \item Adjust your code to use the \texttt{index} template.
-  \item Include your parameters (e.g. \texttt{\{\{name\}\}}) in there
-    somewhere :)
-  \item Don't know HTML? Don't worry! I'll be wandering around
-    answering questions.
+  \item Adjust your code to use the \texttt{index} template. Include
+    your parameters (e.g. \texttt{\{\{name\}\}}) in there somewhere :)
   \end{itemize}
 \end{frame}
 
@@ -854,10 +855,73 @@ class BlogPost(Document):
     free.
   \item Get a bunch of integrated client-side behaviours through
     jQuery.
-  \item There are more things. I cannot do design to save my life.
+  \item There are more things. (I cannot do design to save my life.)
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{But my submission page/other page/etc is still ugly!}
+  \begin{itemize}
+  \item You could copy-paste the template code. Or you could save
+    yourself huge amounts of effort by being smart.
+  \item Create \texttt{bootstrapbase.tpl}, and copy-paste the content
+    of \texttt{index.tpl}.
+  \item Delete everything from (and including):
+\mint{html}|<div class="jumbotron">|
+to (and not including):
+\mint{html}|<div class="footer">|
+Replacing it with the text \texttt{\%include}.
+\item Title (replace Slogan Generator with your project name):
+\mint{html}|<title>{{get('title', 'Slogan Generator')}}</title>|
+\item Likewise with meta tags, you can pass them in as a variable if
+  needed.
+  \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \frametitle{But my submission page/other page/etc is still ugly!}
+  \begin{itemize}
+  \item Now back to \texttt{index.tpl}.
+  \item Delete everything \emph{except} what we deleted from
+    \texttt{bootstrapbase.tpl}
+  \item At the top of \texttt{index.tpl} add:\\
+    \texttt{\%rebase bootstrapbase}
+  \end{itemize}
+\end{frame} 
+
+\begin{frame}
+  \frametitle{Contacts page}
+  \texttt{webapp.py}:
+  \inputminted[firstline=34,lastline=38]{python}{../steps/03-frontend/02-demo-app/webapp.py}
+  \texttt{views/contact.tpl}:
+  \inputminted{html}{../steps/03-frontend/02-demo-app/views/contact.tpl}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item This doesn't deal correctly with the highlighting in the top
+    bar. This is a bit fiddly so I'm not going to go through it
+    now. Some sample code is included, however.
+  \item As things start to get more complicated (replacing chunks of
+    different pages), it's time to swap out SimpleTemplate for a less
+    simple system (e.g. Jinja). (It's possibly also time to move to a
+    more comprehensive framework.)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Buzzword time: AJAX}
+  \begin{itemize}
+  \item AJAX stands for Asynchronous JavaScript and XML.
+  \item That's not how the term is used any more, however.
+    \begin{itemize}
+    \item JSON (JavaScript Object Notation) $>>$ XML (eXtensible
+      Markup Language)
+    \item It can also be synchronous.
+    \end{itemize}
+  \item jQuery (which comes for free with Bootstrap) makes AJAX
+    painless. {\small ... or at least as painless as something in JavaScript can be.}
+  \end{itemize}
+\end{frame}
 
 \end{document}
