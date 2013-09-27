@@ -918,9 +918,96 @@ Replacing it with the text \texttt{\%include}.
     \item JSON (JavaScript Object Notation) $>>$ XML (eXtensible
       Markup Language)
     \item It can also be synchronous.
+    \item Umbrella term for ``getting stuff from a server without
+      loading an entire page again''.
     \end{itemize}
   \item jQuery (which comes for free with Bootstrap) makes AJAX
     painless. {\small ... or at least as painless as something in JavaScript can be.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{AJAX: JSON}
+  \begin{itemize}
+  \item JSON is awesome. We've seen it before with MongoDB. It is also
+    the way JavaScript expresses objects.
+  \item Key-value, \texttt{\{...\}} for objects, \texttt{[...]} for
+    arrays.
+  \item Trivial to parse and generate in every useful language! (Don't
+    DIY it, and especially don't use JS's eval function on it.)
+  \item Lets make our server spit out JSON!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Back to \texttt{webapp.py}}
+  \begin{itemize}
+  \item \mint{python}|from bottle import route, run, ..., response| 
+  \item \mint{python}|import json|
+  \item \inputminted[firstline=21,lastline=24]{python}{../steps/03-frontend/04-demo-app/webapp.py}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Front end: Introducing jQuery}
+  \begin{figure}[h!]
+    \centering
+    \includegraphics{imgs/jquery_logo}
+    \caption{jQuery --- write less, do more. \url{http://jquery.com}}
+    \label{fig:jquery}
+  \end{figure}
+  \begin{itemize}
+  \item jQuery makes JavaScript in the browser not suck.
+  \item I heart it immensely.
+  \item A brief digression on why. TODO demo page.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Front end---\texttt{index.tpl}}
+  \begin{itemize}
+  \item (These will probably be different for you. I'll run through it
+    and then be around to help.)
+  \item Add \texttt{id="slogan"} to the \texttt{h1} with
+    \texttt{\{\{slogan\}\}}.
+  \item Add \texttt{id="generate"} to the \texttt{a} with
+    \texttt{role="button"}. If you've changed the \texttt{href},
+    change it back to \texttt{\#}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Front end---\texttt{static/js/ajax.js}}
+  \inputminted{js}{../steps/03-frontend/04-demo-app/static/js/ajax.js}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Including the script---a bit of hackery in
+    \texttt{bootstrapbase.tpl}}
+  
+  After the other scripts:
+  \begin{minted}{html}
+       <script src="/static/js/ajax.js"></script>
+  \end{minted}
+
+  Yes, this isn't particularly extensible. But jQuery falls over
+  nicely.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hurray, AJAX!}
+
+  \texttt{Don't forget to save to git!}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A review: what have we done?}
+  \begin{itemize}
+  \item A web server written in Python...
+  \item ... reading and writing data from MongoDB ...
+  \item ... with a front end made less ugly by Bootstrap ...
+  \item ... with interactivity through AJAX, implemented in jQuery...
+  \item ... running in a virtual machine on your computer.
   \end{itemize}
 \end{frame}
 
