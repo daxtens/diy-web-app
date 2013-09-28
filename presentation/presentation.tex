@@ -17,7 +17,7 @@
 \title{From 0 to DIY Web App in 120 minutes}
 \author[daniel@axtens.net]{Daniel Axtens\\daniel@axtens.net\\@daxtens}
 
-\setbeameroption{show notes}
+\newcommand\aws[1]{\textcolor{purple}{\texttt{#1}}}
 
 \begin{document}
 
@@ -140,9 +140,12 @@
   \item Download the key file.
   \item Use it to log in to the \texttt{ubuntu} user. \\
     \texttt{ssh-add \textit{path-to-your-key-file}} \\
+    (Does it complain? \texttt{chmod 600 \textit{path-to-your-key-file}})\\
     \texttt{ssh ubuntu@\textit{your-host-name}}
-  \item Update the package lists and packages: \texttt{sudo apt-get
-      update; sudo apt-get upgrade; sudo reboot}
+  \item Windows? Using PuTTY? \url{http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html}
+  \item Update the package lists and packages: \aws{sudo apt-get
+      update; sudo apt-get -y upgrade; sudo reboot}
+  \item SSH in again after it reboots.
   \end{itemize}
 \end{frame}
 
@@ -1009,6 +1012,204 @@ Replacing it with the text \texttt{\%include}.
   \item ... with interactivity through AJAX, implemented in jQuery...
   \item ... running in a virtual machine on your computer.
   \end{itemize}
+\end{frame}
+
+\section{Deploying your app!}
+
+\begin{frame}
+  \frametitle{Deploying your app!}
+  \begin{itemize}
+  \item As exciting as virtual machines on your computer are...
+  \item ... virtual machines on someone else's computer are cooler ...
+  \item ... especially when that other computer is permanently
+    connected to the internet.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{One small thing...}
+  Take out \texttt{debug=True, reloader=True} from \texttt{webapp.py}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Re-introducing AWS}
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.4]{imgs/aws_logo.png}
+    \caption{Amazon Web Services delivers a set of services that together form a reliable, scalable, and inexpensive computing platform ``in the cloud''. \url{aws.amazon.com}}
+    \label{fig:aws_logo}
+  \end{figure}
+
+  {\tiny ``Amazon Web Services'' and the ``Powered by Amazon Web
+    Services'' logo, are trademarks of Amazon.com, Inc. or its
+    affiliates in the United States and/or other countries.}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Somewhere to put your code}
+
+  \aws{sudo adduser --disabled-password webapp}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Getting your source code to the server: introducing
+    Fabric}
+
+  \begin{quote}
+  Fabric is a Python (2.5 or higher) library and command-line tool for
+  streamlining the use of SSH for application deployment or systems
+  administration tasks.
+  \end{quote}
+
+  \url{http://fabfile.org}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{\texttt{fabfile.py}}
+  \inputminted{python}{../steps/04-deployment/01-demo-app/fabfile.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Let's go!}
+  \begin{itemize}
+
+  \item \aws{sudo apt-get -y install python-pip python-dev mongodb}
+
+  \item \texttt{fab -u ubuntu -H \textit{number}.compcon.dja.id.au
+      setup}
+  \item \texttt{fab -u ubuntu -H \textit{number}.compcon.dja.id.au deploy}
+
+  \item \aws{sudo -u webapp -s}\\
+    \aws{python webapp.py}
+  
+  \item Your code should be running, but the website won't work on
+    port 80, and 8080 is firewalled off.
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What not to do}
+  \begin{itemize}
+  \item<1-> ``Why don't we just set \texttt{port=80} in the \texttt{run}
+    function call?''
+  \item<2-> ``Oh, that's odd, it can't bind to port 80. Oh, it's a
+    privileged port? Oh, I can just run it as root!''
+  \item<3-> ``Yay, it works now!''
+  \item<4-> $<$ring ring$>$ ``Hello, this is developer'' ... ``What do
+    you mean my app got owned? My server got owned? And then sent out
+    a million spam messages? And hosted dubiously legal porn?''
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What not to do}
+  {\Huge Don't run your app as root. Ever. Not even for a little
+    while.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Introducing our saviour ... nginx}
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.5]{imgs/nginx_logo.png}
+    \caption{nginx}
+    \label{fig:nginx_logo}
+  \end{figure}
+  \begin{itemize}
+  \item \aws{sudo apt-get -y install nginx-light}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\aws{sudo nano /etc/nginx/sites-available/default}}
+
+\begin{verbatim}
+server {
+        server_name NUMBER.compcon.dja.id.au;
+
+        location / {
+                proxy_pass http://localhost:8080/;
+        }
+}
+\end{verbatim}
+
+  \begin{itemize}
+  \item \aws{sudo service nginx restart}
+  \item Start your process and (assuming it doesn't rely on a
+    pre-seeded database!) it should work!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{``Staying alive, staying alive''\\Introducing
+    \texttt{supervisord}}
+  \begin{figure}[h!]
+    \centering
+    %\includegraphics{imgs/supervisord_logo.gif}
+    \caption{Supervisord: hang on to your processes. \url{http://supervisord.org} }
+    \label{fig:supervisord_logo}
+  \end{figure}
+
+  \begin{itemize}
+  \item \aws{sudo apt-get -y install supervisor}
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\aws{sudo nano /etc/supervisord/conf.d/webapp.conf}}
+\begin{verbatim}
+[program:webapp]
+user=webapp
+command=python /home/webapp/webapp.py
+autostart=true
+autorestart=true
+\end{verbatim}
+  \aws{sudo service supervisor stop; sudo service supervisor start;}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Oh no, it's b0rked!}
+
+  \begin{itemize}
+  \item<1-> \texttt{webapp.py}: \mint{python}|os.chdir(root)|
+  \item<2-> \texttt{fab -u ubuntu -H \textit{number}.compcon.dja.id.au
+      deploy}
+  \item<2-> \aws{sudo supervisorctl restart webapp}
+  \item<3-> (even better, add the following to \texttt{fabfile.py})
+\mint{python}|sudo(``supervisorctl restart webapp'')|
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Recap and further directions}
+  \begin{itemize}
+  \item If you're still sorting out bugs, etc., keep working on that.
+  \item If not, here's some stuff we can look at adding:
+    \begin{itemize}
+    \item Google Analytics
+    \item Authentication
+    \item Speed improvements (nginx: gzipping, caching, direct access
+      to static resources)
+    \item CloudFlare
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Introducing Google Analytics}
+  \begin{figure}[h!]
+    \centering
+    
+    \caption{Google Analytics: Turning data insights into action. \url{http://google.com/analytics}}
+    \label{fig:ga_logo}
+  \end{figure}
+
+  You can figure this out yourself. Just copy the snippet into \texttt{bootstrapbase.tpl}.
+  
 \end{frame}
 
 \end{document}
