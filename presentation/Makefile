@@ -1,6 +1,6 @@
-TEXFILE=presentation
+TEXFILE=presentation-web
 
-all: presentation.pdf
+all: presentation-web.pdf
 
 $(TEXFILE).pdf: $(TEXFILE).tex
 	# Initial run
