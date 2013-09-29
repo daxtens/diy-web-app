@@ -2,7 +2,7 @@ For those reading this after CompCon 2013:
 
 This is a fairly comprehensive tutorial for setting up a Bottle microframework web app with a MongoDB back end and a Bootstrap front end, with nginx and supervisor.
 
-The presentation is in the presentation directory, and all the source code is in the steps directory. If you were *not* at CompCon, you probably want the ```-web``` version.
+The presentation is in the presentation directory, and all the source code is in the steps directory. If you were *not* at CompCon, you probably want the ```-web``` version. (You'll also need to follow the instructions below re: Vagrant first!)
 
 You won't have access to a CompCon AWS instance unless you were at the workshop, but you're welcome to deploy on your own AWS instance, or your own VPS, or not at all. :) 
 
@@ -14,7 +14,7 @@ Enjoy and feel free to get in touch with any questions.
 diy-web-app
 ===========
 
-In 2 hours, you'll build a full stack and (partially) buzzword compliant web app. It's the ideal platform for something too 'different' for a CMS like WordPress and too simple/small to justify using a massive framework like Django. 
+In a couple of hours, you'll build a full stack and (partially) buzzword compliant web app. It's the ideal platform for something too 'different' for a CMS like WordPress and too simple/small to justify using a massive framework like Django. 
 
 By the end of the workshop, you'll have built a web application using Python, the Bottle micro framework, a MongoDB backend, the nginx web server, Amazon Web Services (AWS), and a Bootstrap front-end with some jQuery based AJAX-y fun. We'll also cover authentication (and how not to screw it up), and Google Analytics, so you can watch your app go viral. We'll learn about Fabric for simple deployment, and Vagrant for painless team development. I'll tell you about common security vulnerabilities and how to avoid them. Even better, you will be given a week's usage of an AWS micro instance to host your new app. 
 
