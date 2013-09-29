@@ -1,3 +1,9 @@
+For those reading this after CompCon 2013: 
+This is a fairly comprehensive tutorial for setting up a Bottle microframework web app with a MongoDB back end and a Bootstrap front end, with nginx and supervisor. The presentation is in the presentation directory, and all the source code is in the steps directory. You won't have access to a CompCon AWS instance unless you were at the workshop, but you're welcome to deploy on your own AWS instance :) 
+Enjoy and feel free to get in touch with any questions.
+--- Daniel Axtens, 29/9/13
+
+
 diy-web-app
 ===========
 
