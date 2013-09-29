@@ -7,6 +7,8 @@ import json
 
 root = os.path.dirname(__file__)
 static_root = os.path.join(root, "static")
+if root:
+	os.chdir(root)
 
 def randomslogan():
 	slogan = random.choice(Slogan.objects()).slogan
@@ -20,8 +22,7 @@ def slogan():
 
 @route('/slogan.json')
 def sloganjson():
-	response.set_header('Content-Type', 
-                        'application/json')
+	response.set_header('Content-Type', 'application/json')
 	return json.dumps(randomslogan())
 
 @route('/noun/<noun>')
@@ -53,4 +54,4 @@ def static(path):
     return static_file(path, root=static_root)
 
 if __name__ == '__main__':
-	run(debug=True, reloader=True, host='0.0.0.0')
+	run(host='0.0.0.0')

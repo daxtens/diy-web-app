@@ -21,9 +21,6 @@ def spawn(name, ec2conn, ami):
 def destroy(name, ec2conn):
     reservations = ec2conn.get_all_instances()
     machines = [x.instances[0] for x in reservations if x.instances[0].key_name == name]
-    if not machines:
-        print("%s not found." % name)
-        return
     machines[0].terminate()
     records = route53conn.get_all_rrsets('Z1K1CSURKSBWDX')
     change = records.add_change("DELETE", name+".compcon.dja.id.au.", "CNAME")

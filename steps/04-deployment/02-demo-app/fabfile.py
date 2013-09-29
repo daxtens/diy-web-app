@@ -13,3 +13,5 @@ def deploy():
         sudo("tar -xzf /tmp/webapp.tgz")
     # clean up
     run("rm /tmp/webapp.tgz")
+    # activate
+    sudo("supervisorctl restart webapp")

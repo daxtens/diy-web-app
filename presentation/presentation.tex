@@ -3,7 +3,7 @@
 
 \usepackage{graphicx}
 \usepackage{minted}
-
+\usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,shadows,arrows}
 \tikzstyle{object}=[rectangle, draw=black, rounded corners, fill=blue!40, drop shadow,
@@ -90,7 +90,7 @@
   \begin{itemize}
   \item Get on the internet.
 
-  \item Go to \textbf{TODO: URL HERE} to get these instructions so you
+  \item Go to \\\url{http://dja.compcon.dja.id.au/static/presentation.pdf}\\ to get these instructions so you
     can follow along at your own pace!
   \end{itemize}
 \end{frame}
@@ -102,12 +102,14 @@
   \item Set up git to point this to your repository, not mine.
     \begin{itemize}
     \item Fork the repo on GitHub.
-    \item \texttt{git remote set-url origin git@github.com:\textit{YOU}/diy-web-app.git}
+    \item \texttt{git remote set-url origin
+        https://github.com/\textit{YOU}/diy-web-app}
+    \item (Unless you already have private keys set up, in which case
+      use \texttt{git@github.com:\textit{YOU}/diy-web-app.git})
     \end{itemize}
   \item \texttt{vagrant up}
   \item \texttt{vagrant ssh}
   \item Any changes you make to your local file system are reflected in the virtual machine in the \texttt{/vagrant} directory.
-  \item Open another terminal tab for the next step.
   \end{itemize}
 \end{frame}
 
@@ -137,21 +139,17 @@
   \begin{itemize}
   \item You should have a bit of paper with the details of your EC2
     instance.
-  \item Download the key file.
-  \item Use it to log in to the \texttt{ubuntu} user. \\
-    \texttt{ssh-add \textit{path-to-your-key-file}} \\
-    (Does it complain? \texttt{chmod 600 \textit{path-to-your-key-file}})\\
-    \texttt{ssh ubuntu@\textit{your-host-name}}
-  \item Windows? Using PuTTY? \url{http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html}
+  \item Follow those instructions. You should end up with a shell
+    on your EC2 instance.
   \item Update the package lists and packages: \aws{sudo apt-get
       update; sudo apt-get -y upgrade; sudo reboot}
   \item SSH in again after it reboots.
   \end{itemize}
 \end{frame}
 
-\section{Anatomy of a simple web app}
+\subsection{Anatomy of a simple web app}
 
-\subsection{Overview}
+\subsubsection{Overview}
 
 \begin{frame}
   \frametitle{Anatomy of a simple web app: overview}
@@ -195,7 +193,7 @@
     \end{center}
 \end{frame}
 
-\subsection{Delivery}
+\subsubsection{Delivery}
 
 \begin{frame}
   \frametitle{Anatomy of a simple web app: how does this get to you?}
@@ -350,8 +348,6 @@ def greet(name):
 \begin{frame}
   \frametitle{Danger, Will Robinson!}
   Spot the subtle error and potential security hole.
-
-  First to spot it gets a free freddo. TODO CONFIRM
 \end{frame}
 
 \begin{frame}
@@ -667,7 +663,7 @@ class BlogPost(Document):
   \frametitle{Over to you...}
   \begin{itemize}
   \item What can a MongoEngine Document contain? (Highlights - see
-    your document TODO for the full list)
+    the online documentation for the full list)
     \begin{itemize}
     \item BooleanField
     \item DateTimeField
@@ -825,6 +821,18 @@ class BlogPost(Document):
 \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{What can I do with Bootstrap?}
+  \begin{itemize}
+  \item Have things look not-terrible with minimal effort.
+  \item Have mobile-compatible (``responsive'') layouts basically for
+    free.
+  \item Get a bunch of integrated client-side behaviours through
+    jQuery.
+  \item There are more things. (I cannot do design to save my life.)
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]
 \frametitle{Setting up Bootstrap}
 \begin{itemize}
@@ -847,18 +855,6 @@ class BlogPost(Document):
     \end{itemize}
   \item Adjust your code to use the \texttt{index} template. Include
     your parameters (e.g. \texttt{\{\{name\}\}}) in there somewhere :)
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{What can I do with Bootstrap?}
-  \begin{itemize}
-  \item Have things look not-terrible with minimal effort.
-  \item Have mobile-compatible (``responsive'') layouts basically for
-    free.
-  \item Get a bunch of integrated client-side behaviours through
-    jQuery.
-  \item There are more things. (I cannot do design to save my life.)
   \end{itemize}
 \end{frame}
 
@@ -925,7 +921,7 @@ Replacing it with the text \texttt{\%include}.
       loading an entire page again''.
     \end{itemize}
   \item jQuery (which comes for free with Bootstrap) makes AJAX
-    painless. {\small ... or at least as painless as something in JavaScript can be.}
+    painless. {\tiny ... or at least as painless as something in JavaScript can be.}
   \end{itemize}
 \end{frame}
 
@@ -947,7 +943,7 @@ Replacing it with the text \texttt{\%include}.
   \begin{itemize}
   \item \mint{python}|from bottle import route, run, ..., response| 
   \item \mint{python}|import json|
-  \item \inputminted[firstline=21,lastline=24]{python}{../steps/03-frontend/04-demo-app/webapp.py}
+  \item \inputminted[firstline=21,lastline=25]{python}{../steps/03-frontend/04-demo-app/webapp.py}
   \end{itemize}
 \end{frame}
 
@@ -962,7 +958,6 @@ Replacing it with the text \texttt{\%include}.
   \begin{itemize}
   \item jQuery makes JavaScript in the browser not suck.
   \item I heart it immensely.
-  \item A brief digression on why. TODO demo page.
   \end{itemize}
 \end{frame}
 
@@ -1099,8 +1094,8 @@ Replacing it with the text \texttt{\%include}.
     privileged port? Oh, I can just run it as root!''
   \item<3-> ``Yay, it works now!''
   \item<4-> $<$ring ring$>$ ``Hello, this is developer'' ... ``What do
-    you mean my app got owned? My server got owned? And then sent out
-    a million spam messages? And hosted dubiously legal porn?''
+    you mean my app got owned? My server got owned? And wiped out
+    everything else on the server?''
   \end{itemize}
 \end{frame}
 
@@ -1114,7 +1109,7 @@ Replacing it with the text \texttt{\%include}.
   \frametitle{Introducing our saviour ... nginx}
   \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.5]{imgs/nginx_logo.png}
+    \includegraphics[scale=0.4]{imgs/nginx_logo.png}
     \caption{nginx}
     \label{fig:nginx_logo}
   \end{figure}
@@ -1122,6 +1117,40 @@ Replacing it with the text \texttt{\%include}.
   \item \aws{sudo apt-get -y install nginx-light}
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Reverse Proxy}
+    \begin{center}
+      \begin{tikzpicture}[node distance=0.1cm]
+        \node (proxy) [highlight, rectangle split, rectangle split parts=2]
+        {
+          \textbf{Reverse Proxy}
+          \nodepart{second}nginx
+        };
+        \node (Server) [object, rectangle split, rectangle split parts=2, below=of proxy]
+        {
+          \textbf{Server}
+          \nodepart{second}Python
+        };
+        \node (Frontend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift=-2cm]
+        {
+          \textbf{Static Assets}
+          \nodepart{second}Images \\ CSS \\ JavaScript \\ HTML?
+        };
+        \node (Backend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift = 2cm]
+        {
+          \textbf{Dynamic Content}
+          \nodepart{second}Python\\Templates
+        };
+        \node (Database) [object, rectangle split, rectangle split parts=2, below=of Backend]
+        {
+          \textbf{Database}
+          \nodepart{second}MongoDB
+        };
+      \end{tikzpicture}
+    \end{center}
+\end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{\aws{sudo nano /etc/nginx/sites-available/default}}
@@ -1148,7 +1177,7 @@ server {
     \texttt{supervisord}}
   \begin{figure}[h!]
     \centering
-    %\includegraphics{imgs/supervisord_logo.gif}
+    \includegraphics{imgs/supervisord_logo}
     \caption{Supervisord: hang on to your processes. \url{http://supervisord.org} }
     \label{fig:supervisord_logo}
   \end{figure}
@@ -1171,29 +1200,67 @@ autorestart=true
   \aws{sudo service supervisor stop; sudo service supervisor start;}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Oh no, it's b0rked!}
 
   \begin{itemize}
-  \item<1-> \texttt{webapp.py}: \mint{python}|os.chdir(root)|
+  \item<1-> \texttt{webapp.py}: 
+\begin{minted}{python}
+if root:
+    os.chdir(root)
+\end{minted}
   \item<2-> \texttt{fab -u ubuntu -H \textit{number}.compcon.dja.id.au
       deploy}
   \item<2-> \aws{sudo supervisorctl restart webapp}
   \item<3-> (even better, add the following to \texttt{fabfile.py})
-\mint{python}|sudo(``supervisorctl restart webapp'')|
+\mint{python}|sudo("supervisorctl restart webapp")|
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Recap and further directions}
+  \frametitle{Recap}
+    \begin{center}
+      \begin{tikzpicture}[node distance=0.1cm]
+        \node (proxy) [object, rectangle split, rectangle split parts=2]
+        {
+          \textbf{Reverse Proxy}
+          \nodepart{second}nginx
+        };
+        \node (Server) [object, rectangle split, rectangle split parts=2, below=of proxy]
+        {
+          \textbf{Server}
+          \nodepart{second}Python
+        };
+        \node (Frontend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift=-2cm]
+        {
+          \textbf{Static Assets}
+          \nodepart{second}Images \\ CSS \\ JavaScript \\ HTML?
+        };
+        \node (Backend) [object, rectangle split, rectangle split parts=2, below=of Server, xshift = 2cm]
+        {
+          \textbf{Dynamic Content}
+          \nodepart{second}Python\\Templates
+        };
+        \node (Database) [object, rectangle split, rectangle split parts=2, below=of Backend]
+        {
+          \textbf{Database}
+          \nodepart{second}MongoDB
+        };
+      \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\section{Further directions}
+
+\begin{frame}
+  \frametitle{Further directions}
   \begin{itemize}
   \item If you're still sorting out bugs, etc., keep working on that.
   \item If not, here's some stuff we can look at adding:
     \begin{itemize}
     \item Google Analytics
     \item Authentication
-    \item Speed improvements (nginx: gzipping, caching, direct access
-      to static resources)
+    \item Speed improvements
     \item CloudFlare
     \end{itemize}
   \end{itemize}
@@ -1203,13 +1270,48 @@ autorestart=true
   \frametitle{Introducing Google Analytics}
   \begin{figure}[h!]
     \centering
-    
+    \includegraphics[scale=0.3]{imgs/ga_logo}
     \caption{Google Analytics: Turning data insights into action. \url{http://google.com/analytics}}
     \label{fig:ga_logo}
   \end{figure}
 
   You can figure this out yourself. Just copy the snippet into \texttt{bootstrapbase.tpl}.
   
+\end{frame}
+
+\begin{frame}
+  \frametitle{Authentication}
+  \begin{itemize}
+  \item<1-> We probably don't have time to cover this properly.
+  \item<2-> (Daniel rants about security.)
+  \item<3-> Introducing Cork.
+  \item<4-> Seriously consider a more heavy-weight framework.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{``You are not done yet''}
+  \begin{itemize}
+  \item Your site is slow. \texttt{nginx} can make it faster with
+    gzipping, caching and by retrieving assets without going through
+    Bottle.
+  \item Bottle is slow because it uses a reference WSGI server. Try
+    CherryPy or Paste.
+  \item Consider CloudFlare.
+  \item Consider accessibility.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bonus: ``With great power comes great
+    responsibility''\\Introducing Boto}
+  
+  \begin{itemize}
+  \item ``I have a workshop coming up where I want 30 people to have
+    virtual machines with custom DNS names. Setting up each one takes
+    a couple of minutes and I am very, very lazy.''
+  \end{itemize}
+
 \end{frame}
 
 \end{document}
